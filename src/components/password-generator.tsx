@@ -17,6 +17,7 @@ interface PasswordGeneratorProps {
   memorable: boolean;
   setMemorable: (value: boolean) => void;
   generatePassword: () => void;
+  isGenerating: boolean;
 }
 
 export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
@@ -32,7 +33,8 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
   setIncludeLowercase,
   memorable,
   setMemorable,
-  generatePassword
+  generatePassword,
+  isGenerating
 }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -57,6 +59,12 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
     }
   };
 
+  const handleSliderChange = (value: number | number[]) => {
+    if (typeof value === 'number') {
+      setPasswordLength(value);
+    }
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -77,7 +85,7 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
           minValue={4}
           maxValue={32}
           value={passwordLength}
-          onChange={setPasswordLength}
+          onChange={handleSliderChange}
           className="max-w-full"
           showTooltip
           startContent={
@@ -170,10 +178,11 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
           variant="shadow"
           onPress={generatePassword}
           className="w-full font-medium"
-          startContent={<Icon icon="lucide:refresh-cw" className="text-lg" />}
+          startContent={<Icon icon={isGenerating ? "lucide:loader-2" : "lucide:refresh-cw"} className={isGenerating ? "text-lg animate-spin" : "text-lg"} />}
           size="lg"
+          isDisabled={isGenerating}
         >
-          Generar contraseña
+          {isGenerating ? "Generando..." : "Generar contraseña"}
         </Button>
       </motion.div>
     </motion.div>

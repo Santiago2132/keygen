@@ -7,12 +7,14 @@ interface PasswordDisplayProps {
   password: string;
   copyToClipboard: () => void;
   copied: boolean;
+  isGenerating: boolean;
 }
 
 export const PasswordDisplay: React.FC<PasswordDisplayProps> = ({
   password,
   copyToClipboard,
-  copied
+  copied,
+  isGenerating
 }) => {
   return (
     <Card className="border border-content3 bg-content2/50">
@@ -35,7 +37,7 @@ export const PasswordDisplay: React.FC<PasswordDisplayProps> = ({
               className="font-mono text-lg md:text-xl font-semibold overflow-x-auto scrollbar-hide whitespace-nowrap py-1 flex-1"
               style={{ overflowY: "hidden" }}
             >
-              {password || "Tu contraseña aparecerá aquí"}
+              {isGenerating ? "Generando contraseña..." : (password || "Tu contraseña aparecerá aquí")}
             </motion.div>
           </AnimatePresence>
 
@@ -46,6 +48,7 @@ export const PasswordDisplay: React.FC<PasswordDisplayProps> = ({
               color={copied ? "success" : "primary"}
               onPress={copyToClipboard}
               className="min-w-10"
+              isDisabled={isGenerating || !password || password === "Selecciona al menos un tipo de carácter"}
             >
               <AnimatePresence mode="wait">
                 <motion.div

@@ -18,9 +18,13 @@ export const usePasswordGenerator = () => {
   const [includeLowercase, setIncludeLowercase] = React.useState<boolean>(true);
   const [memorable, setMemorable] = React.useState<boolean>(false);
   const [copied, setCopied] = React.useState<boolean>(false);
+  const [isGenerating, setIsGenerating] = React.useState<boolean>(false);
 
   // Función para generar una contraseña aleatoria
-  const generatePassword = React.useCallback(() => {
+  const generatePassword = React.useCallback(async () => {
+    setIsGenerating(true);
+    await new Promise(resolve => setTimeout(resolve, 300)); // Simular retraso para feedback visual
+
     if (memorable) {
       // Generar una contraseña memorable con palabras
       let result = "";
@@ -47,12 +51,15 @@ export const usePasswordGenerator = () => {
       }
       
       setPassword(result);
+      setIsGenerating(false);
       return;
     }
 
     // Verificar que al menos una opción esté seleccionada
     if (!includeLowercase && !includeUppercase && !includeNumbers && !includeSymbols) {
-      setIncludeLowercase(true);
+      setPassword("Selecciona al menos un tipo de carácter");
+      setIsGenerating(false);
+      return;
     }
 
     let charset = "";
@@ -69,6 +76,7 @@ export const usePasswordGenerator = () => {
     }
 
     setPassword(result);
+    setIsGenerating(false);
   }, [
     passwordLength,
     includeNumbers,
@@ -80,7 +88,7 @@ export const usePasswordGenerator = () => {
 
   // Función para copiar la contraseña al portapapeles
   const copyToClipboard = React.useCallback(() => {
-    if (!password) return;
+    if (!password || password === "Selecciona al menos un tipo de carácter") return;
     
     navigator.clipboard.writeText(password).then(() => {
       setCopied(true);
@@ -109,6 +117,7 @@ export const usePasswordGenerator = () => {
     setMemorable,
     generatePassword,
     copyToClipboard,
-    copied
+    copied,
+    isGenerating
   };
 };

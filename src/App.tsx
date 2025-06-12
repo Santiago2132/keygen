@@ -1,5 +1,4 @@
-import React from "react";
-import { Card, CardBody, Button, Slider, CheckboxGroup, Checkbox, Tooltip } from "@heroui/react";
+import { Card, CardBody} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { PasswordGenerator } from "./components/password-generator";
@@ -23,7 +22,8 @@ export default function App() {
     setMemorable,
     generatePassword,
     copyToClipboard,
-    copied
+    copied,
+    isGenerating
   } = usePasswordGenerator();
 
   return (
@@ -50,9 +50,10 @@ export default function App() {
             </motion.div>
 
             <PasswordDisplay 
-              password={password} 
+              password={password}
               copyToClipboard={copyToClipboard} 
               copied={copied} 
+              isGenerating={isGenerating}
             />
 
             <PasswordGenerator
@@ -69,6 +70,7 @@ export default function App() {
               memorable={memorable}
               setMemorable={setMemorable}
               generatePassword={generatePassword}
+              isGenerating={isGenerating}
             />
           </CardBody>
         </Card>
