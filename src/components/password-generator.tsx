@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Slider, CheckboxGroup, Checkbox, Tooltip } from "@heroui/react";
+import { Button, Slider, Checkbox, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
@@ -65,6 +65,9 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
     }
   };
 
+  // Determine if the generate button should be disabled
+  const isGenerateDisabled = isGenerating || (!memorable && !includeLowercase && !includeUppercase && !includeNumbers && !includeSymbols);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -106,40 +109,43 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <CheckboxGroup label="Opciones de caracteres" orientation="horizontal" className="flex flex-wrap gap-2">
-          <Checkbox 
-            isSelected={includeLowercase} 
-            onValueChange={setIncludeLowercase}
-            isDisabled={memorable}
-            color="primary"
-          >
-            <span className="text-sm">Minúsculas (a-z)</span>
-          </Checkbox>
-          <Checkbox 
-            isSelected={includeUppercase} 
-            onValueChange={setIncludeUppercase}
-            isDisabled={memorable}
-            color="primary"
-          >
-            <span className="text-sm">Mayúsculas (A-Z)</span>
-          </Checkbox>
-          <Checkbox 
-            isSelected={includeNumbers} 
-            onValueChange={setIncludeNumbers}
-            isDisabled={memorable}
-            color="primary"
-          >
-            <span className="text-sm">Números (0-9)</span>
-          </Checkbox>
-          <Checkbox 
-            isSelected={includeSymbols} 
-            onValueChange={setIncludeSymbols}
-            isDisabled={memorable}
-            color="primary"
-          >
-            <span className="text-sm">Símbolos (@#$)</span>
-          </Checkbox>
-        </CheckboxGroup>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Opciones de caracteres</label>
+          <div className="flex flex-col gap-2">
+            <Checkbox 
+              isSelected={includeLowercase} 
+              onValueChange={setIncludeLowercase}
+              isDisabled={memorable}
+              color="primary"
+            >
+              <span className="text-sm">Minúsculas (a-z)</span>
+            </Checkbox>
+            <Checkbox 
+              isSelected={includeUppercase} 
+              onValueChange={setIncludeUppercase}
+              isDisabled={memorable}
+              color="primary"
+            >
+              <span className="text-sm">Mayúsculas (A-Z)</span>
+            </Checkbox>
+            <Checkbox 
+              isSelected={includeNumbers} 
+              onValueChange={setIncludeNumbers}
+              isDisabled={memorable}
+              color="primary"
+            >
+              <span className="text-sm">Números (0-9)</span>
+            </Checkbox>
+            <Checkbox 
+              isSelected={includeSymbols} 
+              onValueChange={setIncludeSymbols}
+              isDisabled={memorable}
+              color="primary"
+            >
+              <span className="text-sm">Símbolos (@#$)</span>
+            </Checkbox>
+          </div>
+        </div>
       </motion.div>
 
       <motion.div variants={itemVariants} className="pt-1">
@@ -180,7 +186,7 @@ export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({
           className="w-full font-medium"
           startContent={<Icon icon={isGenerating ? "lucide:loader-2" : "lucide:refresh-cw"} className={isGenerating ? "text-lg animate-spin" : "text-lg"} />}
           size="lg"
-          isDisabled={isGenerating}
+          isDisabled={isGenerateDisabled}
         >
           {isGenerating ? "Generando..." : "Generar contraseña"}
         </Button>
